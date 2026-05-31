@@ -1,0 +1,105 @@
+{
+  "name": "Monitor Uptime",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/5 * * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "94367268-ffbd-4387-af38-9982cfa46ba6",
+      "name": "Schedule Trigger",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "url": "[URL_SITO_DA_MONITORARE]",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "09269063-59ca-42cd-8606-126dec79a29c",
+      "name": "HTTP Request",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "[IL_TUO_CHAT_ID]",
+        "text": "=🔴 ALERT: il sito è offline! Ora: {{ $now }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        96
+      ],
+      "id": "604701de-000d-4454-a422-f7295d91f864",
+      "name": "Send a text message",
+      "webhookId": "[WEBHOOK_ID]",
+      "credentials": {
+        "telegramApi": {
+          "id": "[ID_CREDENZIALE_N8N]",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Europe/Rome",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "[VERSION_ID]",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "[INSTANCE_ID]"
+  },
+  "id": "[WORKFLOW_ID]",
+  "tags": []
+}
